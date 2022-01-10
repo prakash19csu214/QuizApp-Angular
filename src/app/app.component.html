@@ -1,0 +1,54 @@
+<div class="progress-bar-wrapper" *ngIf="quizStep">
+  <div class="progress-bar" [ngStyle]="{'width': getProgress+'%'}"></div>
+</div>
+<div class="user-details" *ngIf="userDetailsStep">
+  <h1>Simple Quiz App</h1>
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="userDetails" (ngSubmit)="startQuiz()">
+        <div class="form-input">
+          <label>User name</label>
+          <input type="text" class="form-control" formControlName="userName" required>
+        </div>
+        <div class="form-input">
+          <label>Select quiz</label>
+          <select class="form-control" formControlName="selectQuiz" required>
+            <option value="">-- select --</option>
+            <option *ngFor="let quiz of quizs" [value]="quiz">{{quiz}}</option>
+          </select>
+        </div>
+        <div class="form-submit text-center">
+          <button class="btn btn-submit" [disabled]="!userDetails.valid">Start</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="quiz-wrapper" *ngIf="quizStep">
+  <div class="quiz-inner">
+    <h3 class="username">Hi, <span>{{username}}</span></h3>
+    <div class="card">
+      <div class="card-body">
+        <div class="note">Select any one option from below list</div>
+        <h2 class="question">{{singleQuestion?.question || 'Question'}}</h2>
+        <div class="answers-grid">
+          <button 
+            class="btn btn-answer" 
+            *ngFor="let singleAnswer of singleQuestion?.answers; let i = index"
+            (click)="answerPressed($event,singleAnswer, i)">
+              {{singleAnswer.answer}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="btn next-btn" (click)="nextQuestion()"[disabled]="!answerBtnPress">Next</button>
+  </div>
+</div>
+<div class="quiz-result" *ngIf="quizResultStep">
+  <div class="quiz-result-inner">
+    <h2>your score is <span>{{lastScoreGrade}}</span></h2>
+    <h3>Result <span>{{lastScore}}/100 (%)</span></h3>
+    <button class="btn retry-btn" (click)="retry()">Retry</button>
+    <button class="btn btn-new-quiz" (click)="resetQuiz()">New Quiz</button>
+  </div>
+</div>
